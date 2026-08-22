@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio • David Salvet</title>
+<meta name="description" content="Ukázka vybraných projektů.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0D0D0D">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        ink:   '#0D0D0D',
+        muted: '#999DA4',
+        line:  'rgba(255,255,255,0.14)',
+      },
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
+      maxWidth: {
+        col: '768px',
+      },
+    },
+  },
+}
+</script>
+<style>
+  body {
+    background: #0D0D0D;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: #FFFFFF; color: #0D0D0D; }
+  ::-moz-selection { background: #FFFFFF; color: #0D0D0D; }
+
+  /* Lenis smooth scroll */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
+
+  /* ---- Layout grid (identické s davidsalvet.cz) ---- */
+  .col {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 30px;
+  }
+  @media (min-width: 768px) {
+    .col { padding-inline: 64px; }
+  }
+  @media (min-width: 1280px) {
+    .col {
+      max-width: 864px;
+      padding-inline: 0;
+      margin-left: 264px;
+      margin-right: auto;
+    }
+  }
+  .bleed {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 30px;
+  }
+  @media (min-width: 768px) {
+    .bleed { padding-inline: 64px; }
+  }
+  @media (min-width: 1280px) {
+    .bleed { padding-inline: 70px; }
+  }
+
+  /* ---- Typography ---- */
+  .t-hero {
+    font-size: clamp(48px, 5.9vw, 76px);
+    font-weight: 700;
+    letter-spacing: -0.036em;
+    line-height: 1.1;
+  }
+  .t-work {
+    font-size: clamp(64px, 7.5vw, 96px);
+    font-weight: 700;
+    letter-spacing: -0.042em;
+    line-height: 1;
+  }
+  .t-work--long {
+    font-size: clamp(44px, 4.9vw, 70px);
+  }
+  .t-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1.8;
+    text-transform: uppercase;
+  }
+  .sec-num {
+    color: #6b6e74;
+    margin-right: 12px;
+    font-variant-numeric: tabular-nums;
+  }
+  .t-small {
+    font-size: 14px;
+    line-height: 1.8;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- Staggered load-in ---- */
+  @keyframes rise {
+    from { opacity: 0; transform: translate3d(0, 22px, 0); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+  .rise {
+    opacity: 0;
+    animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* ---- Scroll reveal ---- */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* ---- Work rows (identické s davidsalvet.cz) ---- */
+  .row-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(3px);
+    clip-path: inset(50% 0 50% 0);
+    transform: scale(1.08);
+    transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .work-row:hover .row-img,
+  .work-row:focus-visible .row-img {
+    clip-path: inset(0 0 0 0);
+    transform: scale(1.03);
+  }
+  .row-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      rgba(13, 13, 13, 0.82) 0%,
+      rgba(13, 13, 13, 0.55) 45%,
+      rgba(13, 13, 13, 0.25) 100%);
+    opacity: 0;
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .work-row:hover .row-scrim,
+  .work-row:focus-visible .row-scrim {
+    opacity: 1;
+  }
+  .work-base {
+    background-color: #080808;
+    background-image:
+      radial-gradient(120% 80% at 15% 0%,   rgba(255,255,255,0.05), transparent 60%),
+      radial-gradient(90% 70%  at 85% 40%,  rgba(255,255,255,0.04), transparent 62%),
+      radial-gradient(110% 90% at 40% 110%, rgba(255,255,255,0.03), transparent 58%);
+  }
+
+  /* ---- Grain / noise overlay ---- */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.055;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 160px 160px;
+  }
+
+  /* ---- Scroll progress ---- */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 70;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    background: #FFFFFF;
+    will-change: transform;
+  }
+
+  :focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .rise, .reveal { opacity: 1; transform: none; }
+    .grain { display: none; }
+  }
+</style>
+</head>
+
+<body class="bg-ink font-sans text-white antialiased">
+
+<!-- overlays -->
+<div class="grain" aria-hidden="true"></div>
+<div id="progress" class="scroll-progress" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ================= WORK ================= -->
+  <section id="work" class="relative isolate pt-[90px] pb-24 md:pt-[140px] md:pb-40">
+
+    <!-- Backdrop: pinned while the section scrolls past, darkening as it goes. -->
+    <div class="absolute inset-0 z-0">
+      <div class="sticky top-0 h-screen w-full overflow-hidden">
+        <div class="work-base absolute inset-0"></div>
+        <div class="work-dim absolute inset-0 bg-ink opacity-0"></div>
+      </div>
+    </div>
+    <div class="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-ink via-transparent to-ink"></div>
+
+    <div class="relative z-10">
+      <div class="work-list">
+
+        <a href="https://zahradnictvikohout.cz" target="_blank" rel="noopener"
+           class="work-row group relative block overflow-hidden border-t border-line">
+          <img src="img/garden.webp" alt="" class="row-img"><div class="row-scrim"></div>
+          <div class="col relative z-10 flex min-h-[180px] items-center py-8 md:min-h-[238px] md:py-[54px]">
+            <div>
+              <h2 class="t-work t-work--long text-white">ZAHRADNICTVÍ KOHOUT</h2>
+              <p class="t-small mt-2 text-muted transition-colors duration-500 group-hover:text-white">zahradnictvikohout.cz</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://tankovnanarozku.cz" target="_blank" rel="noopener"
+           class="work-row group relative block overflow-hidden border-t border-line">
+          <img src="img/tankovna.webp" alt="" class="row-img"><div class="row-scrim"></div>
+          <div class="col relative z-10 flex min-h-[180px] items-center py-8 md:min-h-[238px] md:py-[54px]">
+            <div>
+              <h2 class="t-work t-work--long text-white">TANKOVNA NA ROŽKU</h2>
+              <p class="t-small mt-2 text-muted transition-colors duration-500 group-hover:text-white">tankovnanarozku.cz</p>
+            </div>
+          </div>
+        </a>
+
+        <a href="https://dobykovo.cz" target="_blank" rel="noopener"
+           class="work-row group relative block overflow-hidden border-t border-line">
+          <img src="img/dobykovo.webp" alt="" class="row-img"><div class="row-scrim"></div>
+          <div class="col relative z-10 flex min-h-[180px] items-center py-8 md:min-h-[238px] md:py-[54px]">
+            <div>
+              <h2 class="t-work t-work--long text-white">DOBYKOVO</h2>
+              <p class="t-small mt-2 text-muted transition-colors duration-500 group-hover:text-white">dobykovo.cz</p>
+            </div>
+          </div>
+        </a>
+
+        <div class="relative block border-y border-line">
+          <div class="col relative z-10 flex min-h-[180px] items-center py-8 md:min-h-[238px] md:py-[54px]">
+            <div>
+              <h2 class="t-work t-work--long text-muted">PŘIPRAVUJI</h2>
+              <p class="t-small mt-2 text-muted">Další projekt na cestě</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="relative z-10 border-t border-line">
+  <div class="bleed flex justify-center py-8">
+    <p class="t-small text-muted">© <span id="year">2026</span> David Salvet</p>
+  </div>
+</footer>
+
+<script>
+  // ---- scroll reveal ----
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // ---- work backdrop darkens as the section scrolls past ----
+  const workSec = document.getElementById('work');
+  const workDim = document.querySelector('.work-dim');
+  if (workSec && workDim && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let queued = false;
+    const paint = () => {
+      queued = false;
+      const r = workSec.getBoundingClientRect();
+      const travel = r.height - window.innerHeight;
+      const p = travel > 0 ? Math.min(1, Math.max(0, -r.top / travel)) : 0;
+      workDim.style.opacity = (p * 0.8).toFixed(3);
+    };
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(paint);
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', onScroll);
+    paint();
+  }
+
+  // ---- scroll progress ----
+  const progress = document.getElementById('progress');
+  if (progress) {
+    let pQueued = false;
+    const paintProgress = () => {
+      pQueued = false;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      progress.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+    };
+    addEventListener('scroll', () => {
+      if (pQueued) return;
+      pQueued = true;
+      requestAnimationFrame(paintProgress);
+    }, { passive: true });
+    addEventListener('resize', paintProgress);
+    paintProgress();
+  }
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+<!-- Lenis smooth scroll (self-hosted UMD) -->
+<script src="js/lenis.min.js"></script>
+<script>
+  (function () {
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || typeof Lenis !== 'function') return;
+    var lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1, smoothWheel: true });
+    window.__lenis = lenis;
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+  })();
+</script>
+
+</body>
+</html>
